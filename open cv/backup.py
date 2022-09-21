@@ -1,26 +1,23 @@
 import cv2 as cv
 import numpy as np
 
-cap = cv.VideoCapture(0)
+#cap = cv.VideoCapture(0)
 
+#cap.set(3, 540)
+#cap.set(4, 540)
 
-cap.set(3, 540)
-cap.set(4, 540)
+img = cv.imread("open cv/chess.png")
+img = cv.resize(img, (0,0), fx=0.3, fy=0.3)
+gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-print(cap.get(3))
-print(cap.get(4))
+corners = cv.goodFeaturesToTrack(gray, 100, 0.01, 10)
+corners = np.int0(corners)
 
-while cap.isOpened():
-    ret, frame = cap.read()
+for corner in corners:
+    x, y = corner.ravel()
+    cv.circle(img, (x,y), 5, (0,0, 255), -1)
 
-    text = "width:" + str(cap.get(3)) +  " Height:" + str(cap.get(4))
+cv.imshow("WINDOW", img)
 
-    
-    scr_info = cv.putText(frame, text, (100,450), cv.FONT_HERSHEY_COMPLEX, 
-                   1, (0, 255, 0), 1, cv.LINE_AA)
-
-    #frame = cv.flip(frame, 1)
-    cv.imshow('camera', frame)
-
-    if cv.waitKey(1) == ord('q'):
-        break
+if cv.waitKey(0) == ord('q'):
+    cv.destroyAllWindows()
